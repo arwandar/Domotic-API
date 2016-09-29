@@ -1,0 +1,12 @@
+{
+    "name": "BackOffice",
+    "version": "1.0.0",
+    "keywords": ["util", "functional", "server", "client", "browser"],
+    "author": "arwandar",
+    "contributors": [],
+    "dependencies": {
+        "js-yaml": "^3.5.4",
+        "knex": "*",
+        "mysql": "*"
+    }
+}
