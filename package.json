@@ -7,6 +7,7 @@
     "dependencies": {
         "js-yaml": "^3.5.4",
         "knex": "*",
-        "mysql": "*"
+        "mysql": "*",
+        "node-hue-api": "*"
     }
 }
