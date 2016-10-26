@@ -3,3 +3,7 @@ database:
     user: root
     pass: root
     name: domotic-api
+hue:
+	user: domotic
+	token: 'hello'
+	host: 192.168.0.
