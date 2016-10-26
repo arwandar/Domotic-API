@@ -10,31 +10,34 @@ var HueApi = require( './module/Utils/HueApi' );
 
 //Init
 var config = Config.get( '../../config.yml' );
-var db = new Database( config );
-var hue = new HueApi();
+// var db = new Database( config );
+var hue = new HueApi(config);
 
 var app = {
     config: config,
-    db: db,
+    // db: db,
     hue: hue
 }
 
-var app = express();
+var application = express();
 
-app.get( '/informations', function( req, res ) {
-    hue.api.getDescription( function( err, config ) {
+application.get( '/informations', function( req, res ) {
+    hue.api.getDescription( function( err, conf ) {
         if ( err ) {
             console.log( 'erreur lors de la connection au bridge' );
             console.log( err );
             return;
         }
-        console.log( config );
-        response.status( 200 ).send( config );
+        console.log( conf );
+        res.status( 200 ).send( conf );
     } );
 } );
 
-app.get( '/startFire', function( req, res ) {
+application.get( '/startFire', function( req, res ) {
     //todo
 } );
 
-// ...
+
+application.listen(3001, 'localhost', function() {
+  console.log("ready");
+});

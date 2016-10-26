@@ -1,9 +1,3 @@
-database:
-    host: localhost
-    user: root
-    pass: root
-    name: domotic-api
 hue:
-	user: domotic
-	token: 'hello'
-	host: 192.168.0.
+	user: UeeDAULhtN8y8pzxLJ-w2MssRCJQClqUrhVoqVMK
+	host: 192.168.0.21

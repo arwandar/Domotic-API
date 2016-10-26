@@ -1,20 +1,21 @@
-var NodeHueApi = require( 'node-hue-api' );
+var NodeHueApi = require( 'node-hue-api' ).HueApi;
 var Config = require( './Config' );
 
-var HueApi = function( app ) {
-    this.app = app;
+var HueApi = function( config ) {
+    this.config = config;
     this.startConnection();
 }
 
 HueApi.prototype.startConnection = function() {
-    this.api = new NodeHueApi( this.app.config.hue.host, this.app.config.hue.user );
-    api.getDescription( function( err, config ) {
+    console.log(this.config);
+    this.api = NodeHueApi( this.config.hue.host, this.config.hue.user );
+    this.api.getDescription( function( err, config ) {
         if ( err ) {
-            console.log( 'erreur lors de la connection au bridge' );
+            console.log( 'erreur lors de la connexion au bridge' );
             console.log( err );
             return;
         }
-        console.log( 'connection au bridge réussie' )
+        console.log( 'connexion au bridge réussie' )
     } );
 };
 
