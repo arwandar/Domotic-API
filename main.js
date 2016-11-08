@@ -6,23 +6,23 @@ var urlencodedParser = bodyParser.urlencoded( {
 
 var Config = require( './module/Utils/Config' );
 var Database = require( './module/Utils/Database' );
-var HueApi = require( './module/Utils/HueApi' );
+var HueInterface = require('./module/Utils/HueInterface');
 
 //Init
 var config = Config.get( '../../config.yml' );
 // var db = new Database( config );
-var hue = new HueApi(config);
+var hue = new HueInterface(config);
 
 var app = {
     config: config,
     // db: db,
     hue: hue
-}
+};
 
 var application = express();
 
 application.get( '/informations', function( req, res ) {
-    hue.api.getDescription( function( err, conf ) {
+    app.hue.api.getDescription(function (err, conf) {
         if ( err ) {
             console.log( 'erreur lors de la connection au bridge' );
             console.log( err );
@@ -33,11 +33,16 @@ application.get( '/informations', function( req, res ) {
     } );
 } );
 
-application.get( '/startFire', function( req, res ) {
-    //todo
+application.get('/light_up', function (req, res) {
+    app.hue.getLightsOn();
+    res.status(200).send();
 } );
 
+application.get('/light_off', function (req, res) {
+    app.hue.getLightsOff();
+    res.status(200).send();
+});
 
-application.listen(3001, 'localhost', function() {
+application.listen(3001, "0.0.0.0", function () {
   console.log("ready");
 });

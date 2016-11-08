@@ -1,3 +1,4 @@
-/nbproject/
-/config.yml
-/node_modules/
+nbproject/
+config.yml
+node_modules/
+.idea/
