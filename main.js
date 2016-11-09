@@ -6,25 +6,26 @@ var urlencodedParser = bodyParser.urlencoded( {
 
 var Config = require( './module/Utils/Config' );
 var Database = require( './module/Utils/Database' );
-var HueInterface = require('./module/Utils/HueInterface');
+var HueInterface = require( './module/Utils/HueInterface' );
 
 //Init
 var config = Config.get( '../../config.yml' );
 // var db = new Database( config );
-var hue = new HueInterface(config);
 
 var app = {
     config: config,
     // db: db,
-    hue: hue
 };
+
+app.hue = new HueInterface( app, function( result ) {
+    app.rooms = result;
+} );
 
 var application = express();
 
 application.get( '/informations', function( req, res ) {
-    app.hue.api.getDescription(function (err, conf) {
+    app.hue.api.getDescription( function( err, conf ) {
         if ( err ) {
-            console.log( 'erreur lors de la connection au bridge' );
             console.log( err );
             return;
         }
@@ -33,16 +34,40 @@ application.get( '/informations', function( req, res ) {
     } );
 } );
 
-application.get('/light_up', function (req, res) {
-    app.hue.getLightsOn();
-    res.status(200).send();
+application.get( '/turn_on', function( req, res ) Q {
+    if ( app.rooms[ req.query[ 'room' ] ] != undefined ) {
+        app.rooms[ req.query[ 'room' ] ].turnOn();
+    } else if ( app.rooms[ req.query[ 'light' ] ] ) {
+        //TODO
+    } else {
+        app.rooms.forEach( function( room ) {
+            element.turnOn();
+        } );
+    }
+    res.status( 200 ).send();
 } );
 
-application.get('/light_off', function (req, res) {
-    app.hue.getLightsOff();
-    res.status(200).send();
-});
+application.get( '/light_off', function( req, res ) {
+    ongoingEffect = false;
+    app.hue.setLightsOff();
+    res.status( 200 ).send();
+} );
 
-application.listen(3001, "0.0.0.0", function () {
-  console.log("ready");
-});
+application.get( '/fire', function( req, res ) {
+    res.status( 200 ).send();
+    ongoingEffect = true;
+
+    function restartFire() {
+        if ( ongoingEffect ) {
+            setTimeout( function() {
+                app.hue.setFire( req.query[ 'room' ] );
+                restartFire();
+            }, 500 );
+        }
+    }
+    restartFire();
+} );
+
+application.listen( 3001, "0.0.0.0", function() {
+    console.log( "ready" );
+} );
