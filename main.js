@@ -19,6 +19,7 @@ var app = {
 
 app.hue = new HueInterface( app, function( result ) {
     app.rooms = result;
+    console.log('done');
 } );
 
 var application = express();
@@ -34,7 +35,27 @@ application.get( '/informations', function( req, res ) {
     } );
 } );
 
-application.get( '/turn_on', function( req, res ) Q {
+application.get('/informationsBis', function (req, res) {
+    var result = [];
+    // console.log(app.rooms);
+    app.rooms.forEach(function (room) {
+        console.log(room);
+        var element = {
+            name: room.entity.name,
+            lights: []
+        };
+        console.log(element);
+        room.lights.forEach(function (light) {
+            element.lights.push(light.entity.id);
+        });
+        console.log(element);
+        result.push(element);
+    });
+
+    res.status(200).send(result);
+});
+
+application.get('/turn_on', function (req, res) {
     if ( app.rooms[ req.query[ 'room' ] ] != undefined ) {
         app.rooms[ req.query[ 'room' ] ].turnOn();
     } else if ( app.rooms[ req.query[ 'light' ] ] ) {

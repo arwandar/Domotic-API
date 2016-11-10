@@ -1,7 +1,8 @@
 var hue = require( "node-hue-api" ),
     NodeHueApi = hue.HueApi,
     lightState = hue.lightState;
-var app.config = require( './app.config' );
+var Room = require('../Model/Room');
+var Light = require('../Model/Light');
 
 var HueInterface = function( app, cb ) {
     this.app = app;
@@ -12,23 +13,20 @@ HueInterface.prototype.startConnection = function( cb ) {
     console.log( this.app.config );
     var self = this;
     this.api = NodeHueApi( this.app.config.hue.host, this.app.config.hue.user );
-    this.state = lightState.create();
     this.api.lights( function( err, lights ) {
         if ( err ) console.log( err );
-        self.api.groups( function( err, rooms ) {
+
+        self.api.groups(function (err, result) {
             var rooms = [];
+            result.forEach(function (element) {
+                if (element.id != 0) rooms[element.name] = new Room(element, self.app);
+            });
+
             lights.lights.forEach( function( element ) {
-                var find = false;
                 for ( var i in rooms ) {
-                    if ( rooms[ i ].includes( element.id ) ) {
-                        room[ i ].addLight( new Light( element, room[ i ] ) );
-                        find = true;
-                        break;
+                    if (rooms[i].entity.lights.indexOf(element.id) >= 0) {
+                        rooms[i].addLight(new Light(element, rooms[i]));
                     }
-                }
-                if ( !find ) {
-                    self.rooms[ i ] = new Room( rooms[ i ], self.app );
-                    room[ i ].addLight( new Light( element, room[ i ] ) );
                 }
             } );
             cb( rooms );
@@ -36,22 +34,15 @@ HueInterface.prototype.startConnection = function( cb ) {
     } );
 };
 
-HueInterface.prototype.getLightsByRoom = function( room, cb ) {
-    this.api.lights( function( err, lights ) {
-        if ( err ) {
-            console.log( err );
-        }
-        var ids = [];
-        lights.lights.forEach( function( element ) {
-            ids.push( element.id );
-        } );
-        cb( ids );
-    } );
-}
+HueInterface.prototype.turnOnRoom = function (roomId) {
+    var state = lightState.create();
+    this.api.setGroupLightState(roomId, state.on());
+};
 
-HueInterface.prototype.setIntensityByLight = function() {
-    var self = this
-}
+HueInterface.prototype.turnOffRoom = function (roomId) {
+    var state = lightState.create();
+    this.api.setGroupLightState(roomId, state.off());
+};
 
 HueInterface.prototype.getLightsOn = function() {
     var self = this;

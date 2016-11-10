@@ -3,14 +3,18 @@ var Room = function( room, app ) {
     this.entity = room;
     this.lights = [];
     this.ongoingEffect = false;
-}
+};
 
 Room.prototype.addLight = function( light ) {
     this.lights.push( light );
 };
 
 Room.prototype.turnOn = function() {
-    //TODO
+    this.app.hue.turnOnRoom(this.entity.id);
 };
 
-moddule.exports = Room;
+Room.prototype.turnOff = function () {
+    this.app.hue.turnOffRoom(this.entity.id);
+};
+
+module.exports = Room;
