@@ -96,5 +96,5 @@ application.listen( 3001, "0.0.0.0", function() {
 } );
 
 var j = schedule.scheduleJob('* * * * *', function(){
-    console.log("hello");
+    app.rooms['Palier'].checkState();
 });
