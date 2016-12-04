@@ -17,4 +17,12 @@ Room.prototype.turnOff = function () {
     this.app.hue.turnOffRoom(this.entity.id);
 };
 
+Room.prototype.checkState = function(cb) {
+	for(var i in lights){
+		this.app.hue.checkState(lights[i].entity.id, function(result){
+			console.log(result);
+		})
+	}
+};
+
 module.exports = Room;

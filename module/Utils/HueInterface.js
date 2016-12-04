@@ -80,4 +80,14 @@ HueInterface.prototype.lightState = function( id ) {
     } );
 };
 
+
+HueInterface.prototype.method_name = function(idLight, cb) {
+    this.api.lightStatus(idLight, function(err, result) {
+            if ( err ) {
+            console.log( err );
+        }
+    cb(result);
+});
+};
+
 module.exports = HueInterface;
