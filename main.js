@@ -3,13 +3,14 @@ var bodyParser = require( 'body-parser' );
 var urlencodedParser = bodyParser.urlencoded( {
     extended: false
 } );
+var schedule = require('node-schedule');
 
 var Config = require( './module/Utils/Config' );
 var Database = require( './module/Utils/Database' );
 var HueInterface = require( './module/Utils/HueInterface' );
 
 //Init
-var config = Config.get( '../../config.yml' );
+var config = Config.get( '../../config.json' );
 // var db = new Database( config );
 
 var app = {
@@ -19,6 +20,7 @@ var app = {
 
 app.hue = new HueInterface( app, function( result ) {
     app.rooms = result;
+    console.log(app.rooms);
     console.log('done');
 } );
 
@@ -92,3 +94,7 @@ application.get( '/fire', function( req, res ) {
 application.listen( 3001, "0.0.0.0", function() {
     console.log( "ready" );
 } );
+
+var j = schedule.scheduleJob('* * * * *', function(){
+    console.log("hello");
+});

@@ -10,6 +10,7 @@
         "mysql": "*",
         "node-hue-api": "*",
         "express": "*",
-        "body-parser": "~1.10.1"
+        "body-parser": "~1.10.1",
+        "node-schedule": "*"
     }
 }
