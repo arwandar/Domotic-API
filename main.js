@@ -95,6 +95,15 @@ application.listen( 3001, "0.0.0.0", function() {
     console.log( "ready" );
 } );
 
-var j = schedule.scheduleJob('* * * * *', function(){
-    app.rooms['Palier'].checkState();
+
+
+var j = schedule.scheduleJob('*/15 * * * * *', function(){
+    app.rooms['Palier'].checkState(function(state){
+        console.log(state);
+        if (state) {
+            setTimeout( function() {
+             app.rooms['Palier'].turnOff();
+            }, 2*60*1000 );
+        }
+    });
 });
