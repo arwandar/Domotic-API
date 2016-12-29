@@ -1,12 +1,11 @@
-var schedule = require( 'node-schedule' );
+var schedule = require('node-schedule');
+var HueSingleton = require('./Utils/HueSingleton');
 
-var CronTask = function( app ) {
-    this.app = app
-    var self = this;
-
-    var j = schedule.scheduleJob( '*/30 * * * * *', function() {
-        self.app.rooms[ 'Palier' ].extinctionAuto( 2 * 60 );
-    } );
+var CronTask = function () {
+    var j = schedule.scheduleJob('*/30 * * * * *', function () {
+        console.log('lancement cron');
+        HueSingleton.getInstance().getRoom('Palier').extinctionAuto(2 * 60);
+    });
 };
 
 module.exports = CronTask;
