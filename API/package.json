@@ -1,0 +1,16 @@
+{
+    "name": "API",
+    "version": "1.0.0",
+    "keywords": [ "util", "functional", "server",],
+    "author": "arwandar",
+    "contributors": [],
+    "dependencies": {
+        "js-yaml": "^3.5.4",
+        "knex": "*",
+        "mysql": "*",
+        "node-hue-api": "*",
+        "express": "*",
+        "body-parser": "~1.10.1",
+        "node-schedule": "*"
+    }
+}
