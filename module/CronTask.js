@@ -4,7 +4,7 @@ var HueSingleton = require('./Utils/HueSingleton');
 var CronTask = function () {
     var j = schedule.scheduleJob('*/30 * * * * *', function () {
         console.log('lancement cron');
-        HueSingleton.getInstance().getRoom('Palier').extinctionAuto(2 * 60);
+        HueSingleton.getRoom('Palier').extinctionAuto(2 * 60);
     });
 };
 

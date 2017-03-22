@@ -1,7 +1,9 @@
 var hue = require("node-hue-api"),
     NodeHueApi = hue.HueApi,
     lightState = hue.lightState;
-var ConfigSingleton = require('./ConfigSingleton');
+var config = require('./ConfigSingleton');
+var Room = require('../Model/Room')
+var Light = require('../Model/Light')
 
 var HueSingleton = function HueSingleton() {
     //defining a var instead of this (works for variable & function) will create a private definition
@@ -10,7 +12,7 @@ var HueSingleton = function HueSingleton() {
     var lights = [];
 
     this.init = function () {
-        var config = ConfigSingleton.getInstance();
+        console.log("miaw", config.hue);
         api = NodeHueApi(config.hue.host, config.hue.user);
 
         api.lights(function (lightErr, lightsResult) {
@@ -22,9 +24,10 @@ var HueSingleton = function HueSingleton() {
 
                 roomsResult.forEach(function (room) {
                     if (room.id != 0) rooms[room.name] = new Room(room);
+
                 });
 
-                lightsResult.forEach(function (light) {
+                lightsResult.lights.forEach(function (light) {
                     for (var i in rooms) {
                         if (rooms[i].entity.lights.indexOf(light.id) >= 0) {
                             lights[light.name] = new Light(light, rooms[i]);
@@ -34,6 +37,8 @@ var HueSingleton = function HueSingleton() {
                 });
             });
         });
+
+        console.log(rooms);
     };
 
     this.getRoom = function (name) {
@@ -112,7 +117,7 @@ HueSingleton.instance = null;
 HueSingleton.getInstance = function () {
     if (this.instance === null) {
         this.instance = new HueSingleton();
-        this.instance.init()
+        this.instance.init();
     }
     return this.instance;
 };

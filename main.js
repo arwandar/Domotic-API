@@ -4,15 +4,19 @@ var urlencodedParser = bodyParser.urlencoded({
     extended: false
 });
 
+var HueSingleton = require('./module/Utils/HueSingleton');
+
 var CronTask = require('./module/CronTask');
 
-new CronTask();
+//new CronTask();
 
 var application = express();
 
 application.get('/informations', function (req, res) {
+    console.log("miaw");
     var result = [];
-    HueSingleton.getInstance().getRooms().forEach(function (room) {
+    HueSingleton.getRooms().forEach(function (room) {
+        console.log(room.entity.name);
         var element = {
             name: room.entity.name,
             lights: []
@@ -26,13 +30,13 @@ application.get('/informations', function (req, res) {
 });
 
 application.get('/turn_on', function (req, res) {
-    if (HueSingleton.getInstance().getRoom(req.query['room'])) {
-        HueSingleton.getInstance().getRoom(req.query['room']).turnOn();
+    if (HueSingleton.getRoom(req.query['room'])) {
+        HueSingleton.getRoom(req.query['room']).turnOn();
     }
-    else if (HueSingleton.getInstance().getLight(req.query['light'])) {
-        HueSingleton.getInstance().getLight(req.query['light']).turnOnLight();
+    else if (HueSingleton.getLight(req.query['light'])) {
+        HueSingleton.getLight(req.query['light']).turnOnLight();
     } else {
-        HueSingleton.getInstance().getRooms().forEach(function (room) {
+        HueSingleton.getRooms().forEach(function (room) {
             room.turnOn();
         });
     }
@@ -61,6 +65,6 @@ application.get('/fire', function (req, res) {
     restartFire();
 });
 
-application.listen(3001, "0.0.0.0", function () {
-    console.log("ready");
+application.listen(3001, function () {
+    console.log("server init");
 });

@@ -1,3 +1,6 @@
+var HueSingleton = require('../Utils/HueSingleton');
+
+
 var Room = function (room) {
     this.entity = room;
     this.lights = [];
@@ -9,13 +12,14 @@ Room.prototype.addLight = function (light) {
     this.lights.push(light);
 };
 
+/*
 Room.prototype.turnOn = function () {
-    HueSingleton.getInstance().turnOnRoom(this.entity.id);
+    HueSingleton.turnOnRoom(this.entity.id);
 };
 
 Room.prototype.turnOff = function () {
     this.ongoingEffect = false;
-    HueSingleton.getInstance().turnOffRoom(this.entity.id);
+    HueSingleton.turnOffRoom(this.entity.id);
 };
 
 Room.prototype.checkState = function (cb) {
@@ -39,5 +43,7 @@ Room.prototype.extinctionAuto = function (time) {
         }
     })
 };
+
+*/
 
 module.exports = Room;

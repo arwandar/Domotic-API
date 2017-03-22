@@ -34,7 +34,7 @@ ConfigSingleton.getInstance = function () {
         this.instance = new ConfigSingleton();
         this.instance.init()
     }
-    return this.instance;
+    return this.instance.getParams();
 };
 
 module.exports = ConfigSingleton.getInstance();
