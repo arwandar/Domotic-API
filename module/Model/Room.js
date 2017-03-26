@@ -43,4 +43,13 @@ Room.prototype.extinctionAuto = function(time) {
     })
 };
 
+Room.prototype.fire = function() {
+    this.ongoingEffect = true;
+    var self = this;
+    console.log("lancement");
+    for (var i in self.lights) {
+        self.lights[i].fire();
+    }
+}
+
 module.exports = Room;

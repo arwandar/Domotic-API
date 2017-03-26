@@ -31,13 +31,8 @@ application.get('/informations', function(req, res) {
 });
 
 application.get('/turn_on/:object', function(req, res) {
-    if (req.object) {
-        req.object.turnOn();
-        res.status(200).send("miaw");
-    } else {
-        res.status(404).send("sniffff");
-    }
-
+    req.object.turnOn();
+    res.status(200).send("miaw");
 });
 
 application.get('/turn_on', function(req, res) {
@@ -50,13 +45,8 @@ application.get('/turn_on', function(req, res) {
 });
 
 application.get('/turn_off/:object', function(req, res) {
-    if (req.object) {
-        req.object.turnOff();
-        res.status(200).send("miaw");
-    } else {
-        res.status(404).send("sniffff");
-    }
-
+    req.object.turnOff();
+    res.status(200).send("miaw");
 });
 
 application.get('/turn_off', function(req, res) {
@@ -73,33 +63,30 @@ application.param('object', function(req, res, next) {
         req.object = object;
     } else if (object = HueSingleton.getLight(req.params.object)) {
         req.object = object;
-
     } else {
-        req.object = null;
+        res.status(404).send("sniffff");
+        return;
     }
     return next();
 });
 
-application.get('/light_off', function(req, res) {
-    ongoingEffect = false;
-    app.hue.setLightsOff();
-    res.status(200).send();
+application.param('room', function(req, res, next) {
+    var room = HueSingleton.getRoom(req.params.room);
+    if (!room) {
+        res.status(404).send("sniffff");
+    } else {
+        req.room = room ? room : null;
+        return next();
+    }
 });
 
 application.get('/fire', function(req, res) {
-    res.status(200).send();
-    ongoingEffect = true;
+    res.redirect('/fire/Salon');
+});
 
-    function restartFire() {
-        if (ongoingEffect) {
-            setTimeout(function() {
-                app.hue.setFire(req.query['room']);
-                restartFire();
-            }, 500);
-        }
-    }
-
-    restartFire();
+application.get('/fire/:room', function(req, res) {
+    console.log("fire in " + req.room.entity.name);
+    req.room.fire();
 });
 
 application.listen(3001, function() {

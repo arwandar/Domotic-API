@@ -84,6 +84,14 @@ var HueSingleton = function HueSingleton() {
         });
     };
 
+    this.randomWhite = function(lightId) {
+        var intensite = Math.round(Math.random() * 100 + 1);
+        console.log(intensite);
+        var state = lightState.create().on().white(500, intensite);
+        api.setLightState(lightId, state);
+    }
+
+    //NOT USE
     this.lightState = function(id) {
         console.log(id);
         api.setLightState(id, this.state, function(err, result) {
