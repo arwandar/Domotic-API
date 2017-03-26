@@ -13,19 +13,19 @@ var CronTask = require('./module/CronTask');
 var application = express();
 
 application.get('/informations', function (req, res) {
-    console.log("miaw");
     var result = [];
-    HueSingleton.getRooms().forEach(function (room) {
-        console.log(room.entity.name);
+    var rooms = HueSingleton.getRooms();
+    for (var i in rooms){
+        var room = rooms[i];
         var element = {
-            name: room.entity.name,
+            name: i,
             lights: []
         };
         room.lights.forEach(function (light) {
-            element.lights.push(light.entity.id);
+            element.lights.push(light.entity.name);
         });
         result.push(element);
-    });
+    }
     res.status(200).send(result);
 });
 

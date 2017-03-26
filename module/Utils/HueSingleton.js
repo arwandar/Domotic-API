@@ -12,7 +12,6 @@ var HueSingleton = function HueSingleton() {
     var lights = [];
 
     this.init = function () {
-        console.log("miaw", config.hue);
         api = NodeHueApi(config.hue.host, config.hue.user);
 
         api.lights(function (lightErr, lightsResult) {
@@ -24,7 +23,6 @@ var HueSingleton = function HueSingleton() {
 
                 roomsResult.forEach(function (room) {
                     if (room.id != 0) rooms[room.name] = new Room(room);
-
                 });
 
                 lightsResult.lights.forEach(function (light) {
@@ -35,10 +33,9 @@ var HueSingleton = function HueSingleton() {
                         }
                     }
                 });
+                console.log('init bridge done');
             });
         });
-
-        console.log(rooms);
     };
 
     this.getRoom = function (name) {
