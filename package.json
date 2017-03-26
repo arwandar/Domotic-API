@@ -1,7 +1,7 @@
 {
     "name": "BackOffice",
     "version": "1.0.0",
-    "keywords": [ "util", "functional", "server", "client", "browser" ],
+    "keywords": ["util", "functional", "server", "client", "browser"],
     "author": "arwandar",
     "contributors": [],
     "dependencies": {
@@ -11,7 +11,6 @@
         "node-hue-api": "*",
         "express": "*",
         "body-parser": "~1.10.1",
-        "node-schedule": "*",
-        "promise" : "*"
+        "node-schedule": "*"
     }
 }

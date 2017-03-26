@@ -1,17 +1,17 @@
-var HueSingleton = require('../Utils/HueSingleton');
+var hueSingleton;
 
-
-var Light = function (light, room) {
+var Light = function(light, room) {
+    hueSingleton = require('../Utils/HueSingleton');
     this.entity = light;
     this.room = room;
 };
 
-Light.prototype.turnOn = function () {
-    HueSingleton.turnOnLight(this.entity.id);
+Light.prototype.turnOn = function() {
+    hueSingleton.turnOnLight(this.entity.id);
 };
 
-Light.prototype.turnOff = function () {
-    HueSingleton.turnOffLight(this.entity.id);
+Light.prototype.turnOff = function() {
+    hueSingleton.turnOffLight(this.entity.id);
 };
 
 module.exports = Light;

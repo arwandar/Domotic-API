@@ -2,8 +2,8 @@ var hue = require("node-hue-api"),
     NodeHueApi = hue.HueApi,
     lightState = hue.lightState;
 var config = require('./ConfigSingleton');
-var Room = require('../Model/Room')
-var Light = require('../Model/Light')
+var Room = require('../Model/Room');
+var Light = require('../Model/Light');
 
 var HueSingleton = function HueSingleton() {
     //defining a var instead of this (works for variable & function) will create a private definition
@@ -11,21 +11,16 @@ var HueSingleton = function HueSingleton() {
     var rooms = [];
     var lights = [];
 
-    this.init = function () {
+    this.init = function() {
         api = NodeHueApi(config.hue.host, config.hue.user);
 
-        api.lights(function (lightErr, lightsResult) {
-            api.groups(function (roomErr, roomsResult) {
-                if (lightErr || roomErr) {
-                    console.log(lightErr + roomErr);
-                    return;
-                }
-
-                roomsResult.forEach(function (room) {
+        api.groups().then(function(roomsResult) {
+                roomsResult.forEach(function(room) {
                     if (room.id != 0) rooms[room.name] = new Room(room);
                 });
-
-                lightsResult.lights.forEach(function (light) {
+                return api.lights();
+            }).then(function(lightsResult) {
+                lightsResult.lights.forEach(function(light) {
                     for (var i in rooms) {
                         if (rooms[i].entity.lights.indexOf(light.id) >= 0) {
                             lights[light.name] = new Light(light, rooms[i]);
@@ -33,12 +28,18 @@ var HueSingleton = function HueSingleton() {
                         }
                     }
                 });
-                console.log('init bridge done');
-            });
-        });
+                console.log("init bridge done");
+            })
+            .catch(function(error) {
+                console.log("error!!!", error);
+            }).done();
     };
 
-    this.getRoom = function (name) {
+    this.getRooms = function() {
+        return rooms;
+    }
+
+    this.getRoom = function(name) {
         if (rooms[name] != undefined) {
             return rooms[name];
         } else {
@@ -46,7 +47,7 @@ var HueSingleton = function HueSingleton() {
         }
     };
 
-    this.getLight = function (name){
+    this.getLight = function(name) {
         if (lights[name] != undefined) {
             return lights[name];
         } else {
@@ -54,32 +55,28 @@ var HueSingleton = function HueSingleton() {
         }
     }
 
-    this.getRooms = function (){
-        return rooms;
-    }
-
-    this.turnOnRoom = function (roomId) {
+    this.turnOnRoom = function(roomId) {
         var state = lightState.create();
         api.setGroupLightState(roomId, state.on());
     };
 
-    this.turnOffRoom = function (roomId) {
+    this.turnOffRoom = function(roomId) {
         var state = lightState.create();
         api.setGroupLightState(roomId, state.off());
     };
 
-    this.turnOnLight = function (lightId) {
+    this.turnOnLight = function(lightId) {
         var state = lightState.create();
-        api.lightState(roomId, state.on());
+        api.setLightState(lightId, state.on());
     };
 
-    this.turnOffLight = function (lightId) {
+    this.turnOffLight = function(lightId) {
         var state = lightState.create();
-        api.lightState(roomId, state.on());
+        api.setLightState(lightId, state.off());
     };
 
-    this.checkState = function (idLight, cb) {
-        api.lightStatus(idLight, function (err, result) {
+    this.checkState = function(idLight, cb) {
+        api.lightStatus(idLight, function(err, result) {
             if (err) {
                 console.log(err);
             }
@@ -87,9 +84,9 @@ var HueSingleton = function HueSingleton() {
         });
     };
 
-    this.lightState = function (id) {
+    this.lightState = function(id) {
         console.log(id);
-        api.setLightState(id, this.state, function (err, result) {
+        api.setLightState(id, this.state, function(err, result) {
             if (err) {
                 console.log(err);
             }
@@ -111,7 +108,7 @@ HueSingleton.instance = null;
  * HueSingleton getInstance definition
  * @return HueSingleton class
  */
-HueSingleton.getInstance = function () {
+HueSingleton.getInstance = function() {
     if (this.instance === null) {
         this.instance = new HueSingleton();
         this.instance.init();
