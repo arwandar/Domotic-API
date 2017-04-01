@@ -5,6 +5,7 @@ var urlencodedParser = bodyParser.urlencoded({
 });
 
 var HueSingleton = require('./module/Utils/HueSingleton');
+var config = require('./module/Utils/ConfigSingleton');
 
 var CronTask = require('./module/CronTask');
 
@@ -89,6 +90,6 @@ application.get('/fire/:room', function(req, res) {
     req.room.fire();
 });
 
-application.listen(3001, function() {
+application.listen(config.server.port, function() {
     console.log("server init");
 });
